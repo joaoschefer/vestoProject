@@ -1,0 +1,44 @@
+.layout {
+    display: flex;
+}
+
+.dashboard {
+    flex: 1;
+    margin-left: 250px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.card {
+    padding: 1.5rem;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card h2 {
+    margin-bottom: 0.5rem;
+}
+
+.ganho {
+    background-color: #4caf50;
+}
+
+.gasto {
+    background-color: #f44336;
+}
+
+.saldo {
+    background-color: #2196f3;
+}
+
+.investimento {
+    background-color: #ff9800;
+}
