@@ -37,6 +37,26 @@ function Despesas() {
         "Outros Ganhos"
     ]);
 
+    const API_URL = "http://localhost:8000/api/transacoes";
+
+    useEffect(() => {
+        const fetchTransacoes = async () => {
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) {
+                    throw new Error("Erro na requisição");
+                }
+                const data = await response.json();
+                setTransacoes(data);
+            } catch (error) {
+                console.error("Erro ao buscar transações:", error);
+            }
+        };
+
+        fetchTransacoes();
+    }, []);
+
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setNovaTransacao({ ...novaTransacao, [name]: value });
