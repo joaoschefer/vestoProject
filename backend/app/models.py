@@ -23,9 +23,6 @@ class Transacao(models.Model):
     categoria = models.CharField(max_length=100)
     metodoPagamento = models.CharField(max_length=50)
     criado_em = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.tipo.capitalize()} de {self.valor} em {self.data} ({self.categoria})"
     
     class Meta:
         ordering = ['-data', '-criado_em']
