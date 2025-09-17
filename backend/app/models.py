@@ -26,3 +26,17 @@ class Transacao(models.Model):
     
     class Meta:
         ordering = ['-data', '-criado_em']
+
+class Investimento(models.Model):
+    TIPO_CHOICES = [
+        ('acao', 'Ação'),
+        ('fundoimobiliario', 'Fundo Imobiliário'),
+        ('rendafixa', 'Renda Fixa'),
+        ('eua', 'Estados Unidos'),
+    ]
+
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    ativo = models.CharField(max_length=10, null=True, blank=True)
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    cotas = models.DecimalField(max_digits=10, decimal_places=2)
+    data = models.DateField()
