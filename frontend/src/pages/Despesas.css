@@ -1,208 +1,226 @@
-/* Layout base já existente */
 .layout {
     display: flex;
 }
 
-/* Conteúdo principal da página de despesas */
 .despesas-content {
     flex: 1;
     margin-left: 250px;
-    margin-top: 60px;
-    padding: 2rem;
-    background-color: #f8f9fa;
-    min-height: calc(100vh - 60px);
-    box-sizing: border-box;
+    margin-top: 64px;
+    padding: 3rem clamp(1.5rem, 4vw, 3.5rem);
+    min-height: calc(100vh - 64px);
+    color: var(--text-primary);
+    background: radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.1), transparent 60%),
+                radial-gradient(circle at 80% 10%, rgba(139, 92, 246, 0.12), transparent 60%);
 }
 
 .despesas-content h1 {
-    color: #343a40;
-    margin-bottom: 2rem;
-    text-align: center;
+    text-align: left;
+    font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+    margin-bottom: 2.5rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 
-/* Estilos para as seções */
-.adicionar-transacao, /* Nova classe */
-.lista-transacoes {   /* Nova classe */
-    background-color: #ffffff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-bottom: 2rem;
+.adicionar-transacao,
+.lista-transacoes {
+    background: rgba(17, 24, 39, 0.88);
+    border: 1px solid var(--divider);
+    border-radius: 18px;
+    padding: clamp(1.5rem, 3vw, 2rem);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(16px);
+    margin-bottom: 2.5rem;
 }
 
-.adicionar-transacao h2, /* Nova classe */
-.lista-transacoes h2 {   /* Nova classe */
-    color: #495057;
+.adicionar-transacao h2,
+.lista-transacoes h2 {
     margin-bottom: 1.5rem;
-    border-bottom: 1px solid #e9ecef;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    font-size: 1.1rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
 }
 
-/* Estilos do Formulário */
-.transacao-form { /* Nova classe */
+.transacao-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-bottom: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem 1.5rem;
 }
 
 .form-group {
     display: flex;
     flex-direction: column;
+    gap: 0.6rem;
 }
 
 .form-group label {
-    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: #495057;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
 }
 
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group input[type="date"],
 .form-group select {
-    padding: 0.75rem;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 1rem;
-    width: 100%;
-    box-sizing: border-box;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(9, 13, 22, 0.95);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-    border-color: #007bff;
+    border-color: rgba(59, 130, 246, 0.75);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18);
     outline: none;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
 .btn-adicionar {
     grid-column: 1 / -1;
-    background-color: #007bff; /* Mudei para azul para ser mais neutro */
-    color: white;
-    padding: 0.8rem 1.5rem;
+    margin-top: 0.5rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(139, 92, 246, 0.75));
+    color: #fff;
+    padding: 0.9rem 1.4rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 12px;
     cursor: pointer;
     font-size: 1rem;
     font-weight: 600;
-    transition: background-color 0.2s ease-in-out;
-    margin-top: 1rem;
+    box-shadow: 0 15px 30px rgba(59, 130, 246, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-adicionar:hover {
-    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.45);
 }
 
-/* Estilos da Tabela de Transações */
-.lista-transacoes table { /* Nova classe */
+.btn-adicionar:active {
+    transform: translateY(0);
+}
+
+.lista-transacoes table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1.5rem;
+    border-radius: 14px;
+    overflow: hidden;
 }
 
 .lista-transacoes th,
 .lista-transacoes td {
-    border: 1px solid #dee2e6;
-    padding: 0.75rem;
+    padding: 0.85rem 1rem;
     text-align: left;
     vertical-align: middle;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 
 .lista-transacoes th {
-    background-color: #e9ecef;
-    color: #495057;
-    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    background: rgba(15, 23, 42, 0.92);
 }
 
-.lista-transacoes tr:nth-child(even) {
-    background-color: #f8f9fa;
+.lista-transacoes tbody tr {
+    transition: background 0.2s ease;
 }
 
-.lista-transacoes tr:hover {
-    background-color: #e2e6ea;
+.lista-transacoes tbody tr:hover {
+    background: rgba(59, 130, 246, 0.08);
 }
 
-/* Estilos para os valores de Despesa e Ganho */
+.lista-transacoes tbody tr:nth-child(even) {
+    background: rgba(15, 23, 42, 0.6);
+}
+
 .valor-despesa {
     font-weight: 600;
-    color: #dc3545; /* Vermelho para despesas */
+    color: var(--accent-danger);
 }
 
 .valor-ganho {
     font-weight: 600;
-    color: #28a745; /* Verde para ganhos */
+    color: var(--accent-success);
 }
 
-/* Estilos para as tags de Tipo */
 .tipo-tag {
-    display: inline-block;
-    padding: 0.25em 0.6em;
-    font-size: 75%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.75rem;
     font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25rem;
-    color: white; /* Cor do texto dentro da tag */
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .tipo-tag.despesa {
-    background-color: #dc3545; /* Cor de fundo para despesa */
+    background: rgba(248, 113, 113, 0.25);
+    color: var(--accent-danger);
 }
 
 .tipo-tag.ganho {
-    background-color: #28a745; /* Cor de fundo para ganho */
+    background: rgba(52, 211, 153, 0.25);
+    color: var(--accent-success);
 }
 
-
-/* Estilos dos botões de ação na tabela */
 .btn-action {
-    background-color: #007bff;
-    color: white;
-    padding: 0.5rem 0.8rem;
-    border: none;
-    border-radius: 4px;
+    background: rgba(59, 130, 246, 0.15);
+    color: var(--text-primary);
+    padding: 0.55rem 0.9rem;
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    border-radius: 10px;
     cursor: pointer;
     font-size: 0.85rem;
-    margin-right: 0.5rem;
-    transition: background-color 0.2s ease-in-out;
+    font-weight: 600;
+    margin-right: 0.4rem;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .btn-action:hover {
-    background-color: #0056b3;
+    background: rgba(59, 130, 246, 0.28);
+    transform: translateY(-1px);
 }
 
 .btn-action.btn-delete {
-    background-color: #dc3545;
+    background: rgba(248, 113, 113, 0.12);
+    border-color: rgba(248, 113, 113, 0.4);
 }
 
 .btn-action.btn-delete:hover {
-    background-color: #c82333;
+    background: rgba(248, 113, 113, 0.22);
 }
 
-/* Centraliza o texto de "Nenhuma movimentação" */
-.lista-transacoes p { /* Nova classe */
+.lista-transacoes p {
     text-align: center;
-    color: #6c757d;
+    color: var(--text-muted);
     font-style: italic;
-    margin-top: 1rem;
+    margin-top: 1.25rem;
 }
 
-/* Ajuste para telas menores */
-@media (max-width: 768px) {
+@media (max-width: 960px) {
     .despesas-content {
         margin-left: 0;
-        padding: 1rem;
+        padding-top: 5.5rem;
     }
+}
 
-    .transacao-form { /* Nova classe */
+@media (max-width: 768px) {
+    .transacao-form {
         grid-template-columns: 1fr;
     }
 
-    .lista-transacoes table, /* Nova classe */
+    .lista-transacoes table,
     .lista-transacoes thead,
     .lista-transacoes tbody,
     .lista-transacoes th,
@@ -219,38 +237,38 @@
 
     .lista-transacoes tr {
         margin-bottom: 1rem;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 12px;
+        background: rgba(15, 23, 42, 0.92);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.5);
     }
 
     .lista-transacoes td {
         border: none;
         position: relative;
-        padding-left: 50%;
+        padding-left: 55%;
         text-align: right;
     }
 
     .lista-transacoes td::before {
         content: attr(data-label);
         position: absolute;
-        left: 0.75rem;
+        left: 1rem;
         width: 45%;
-        padding-right: 10px;
         white-space: nowrap;
         font-weight: 600;
         text-align: left;
-        color: #495057;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
     }
-    
-    /* Atualizado os labels para corresponder às novas colunas */
+
     .lista-transacoes td:nth-of-type(1)::before { content: "Data:"; }
-    .lista-transacoes td:nth-of-type(2)::before { content: "Tipo:"; } /* Adicionado */
-    .lista-transacoes td:nth-of-type(3)::before { content: "Descrição:"; }
+    .lista-transacoes td:nth-of-type(2)::before { content: "Tipo:"; }
+    .lista-transacoes td:nth-of-type(3)::before { content: "Descricao:"; }
     .lista-transacoes td:nth-of-type(4)::before { content: "Categoria:"; }
-    .lista-transacoes td:nth-of-type(5)::before { content: "Método:"; }
+    .lista-transacoes td:nth-of-type(5)::before { content: "Metodo:"; }
     .lista-transacoes td:nth-of-type(6)::before { content: "Valor:"; }
-    .lista-transacoes td:nth-of-type(7)::before { content: "Ações:"; } /* Índices ajustados */
+    .lista-transacoes td:nth-of-type(7)::before { content: "Acoes:"; }
 
     .btn-action {
         width: 100%;
@@ -258,3 +276,4 @@
         margin-right: 0;
     }
 }
+

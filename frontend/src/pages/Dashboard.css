@@ -1,45 +1,112 @@
 .layout {
     display: flex;
+    background: transparent;
 }
 
 .dashboard {
     flex: 1;
     margin-left: 250px;
-    margin-top: 60px;
-    padding: 1rem;
-    text-align: center;
+    margin-top: 64px;
+    padding: 3rem clamp(1.5rem, 4vw, 3.5rem);
+    min-height: calc(100vh - 64px);
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 55%),
+                radial-gradient(circle at bottom left, rgba(139, 92, 246, 0.12), transparent 55%);
+    color: var(--text-primary);
+}
+
+.dashboard h1 {
+    font-size: clamp(1.6rem, 2.5vw, 2rem);
+    font-weight: 600;
+    text-align: left;
+    letter-spacing: 0.02em;
 }
 
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
 }
 
 .card {
-    padding: 1.5rem;
-    border-radius: 10px;
-    color: white;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding: 1.75rem;
+    border-radius: 18px;
+    color: var(--text-primary);
+    border: 1px solid var(--divider);
+    background: rgba(17, 24, 39, 0.88);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--bg-card-alt);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 25px 55px rgba(15, 23, 42, 0.6);
+}
+
+.card:hover::after {
+    opacity: 1;
 }
 
 .card h2 {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
 }
 
-.ganho {
-    background-color: #4caf50;
+.card p {
+    font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+    font-weight: 600;
 }
 
-.gasto {
-    background-color: #f44336;
+.card.ganho {
+    border-color: rgba(52, 211, 153, 0.25);
 }
 
-.saldo {
-    background-color: #2196f3;
+.card.gasto {
+    border-color: rgba(248, 113, 113, 0.25);
 }
 
-.investimento {
-    background-color: #ff9800;
+.card.saldo {
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+.card.investimento {
+    border-color: rgba(251, 191, 36, 0.25);
+}
+
+.card.ganho p {
+    color: var(--accent-success);
+}
+
+.card.gasto p {
+    color: var(--accent-danger);
+}
+
+.card.saldo p {
+    color: var(--accent-primary);
+}
+
+.card.investimento p {
+    color: var(--accent-warning);
+}
+
+@media (max-width: 960px) {
+    .dashboard {
+        margin-left: 0;
+        padding-top: 5.5rem;
+    }
 }

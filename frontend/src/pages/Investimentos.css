@@ -1,66 +1,47 @@
-/* ===== Mantém seu layout existente ===== */
 .layout {
   display: flex;
 }
 
 .investimentos {
   flex: 1;
-  margin-left: 250px; /* Sidebar fixa */
-  margin-top: 60px;   /* Header fixo */
-  padding: 1rem;
-  text-align: center;
-}
-
-/* ===== Paleta e base visual (apenas dentro de .investimentos) ===== */
-.investimentos {
-  background: #0f172a;                 /* fundo da área principal */
-  color: #e5e7eb;
-  border-left: 1px solid #1f2a44;
-  min-height: calc(100vh - 60px);      /* ocupa a tela abaixo do header */
+  margin-left: 250px;
+  margin-top: 64px;
+  padding: 3rem clamp(1.5rem, 4vw, 3.5rem);
+  min-height: calc(100vh - 64px);
+  color: var(--text-primary);
+  background: radial-gradient(circle at 12% 18%, rgba(59, 130, 246, 0.1), transparent 55%),
+              radial-gradient(circle at 85% 8%, rgba(139, 92, 246, 0.12), transparent 60%);
 }
 
 .investimentos h1 {
-  font-size: 1.4rem;
-  margin: 0 0 1rem 0;
+  text-align: left;
+  font-size: clamp(1.6rem, 2.4vw, 2.1rem);
   font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 2.5rem;
 }
 
-/* ===== Cartão que envolve o formulário ===== */
 .form-investimento {
   margin: 0 auto;
   max-width: 1100px;
-  text-align: left;
-  background: #0b1220;
-  border: 1px solid #1f2a44;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.25);
-}
-
-/* Grid do formulário (não mexe no seu layout externo) */
-.form-investimento {
   display: grid;
-  grid-template-columns: repeat(4, minmax(160px, 1fr));
-  gap: 14px;
-}
-
-@media (max-width: 1200px) {
-  .form-investimento {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 640px) {
-  .form-investimento {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 1rem 1.4rem;
+  background: rgba(17, 24, 39, 0.88);
+  border: 1px solid var(--divider);
+  border-radius: 18px;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(16px);
 }
 
 .form-investimento label {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: .95rem;
-  color: #93a5c5;
+  gap: 0.6rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-muted);
 }
 
 .form-investimento select,
@@ -68,64 +49,61 @@
 .form-investimento input[type="number"],
 .form-investimento input[type="date"] {
   appearance: none;
-  background: #091121;
-  color: #e5e7eb;
-  border: 1px solid #233253;
-  border-radius: 10px;
-  padding: 10px 12px;
-  outline: none;
-  transition: border-color .2s, box-shadow .2s;
-}
-
-.form-investimento select:focus,
-.form-investimento input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59,130,246,.15);
+  background: rgba(9, 13, 22, 0.95);
+  color: var(--text-primary);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-investimento input::placeholder {
-  color: #7d90ad;
+  color: var(--text-muted);
+}
+
+.form-investimento input:focus,
+.form-investimento select:focus {
+  border-color: rgba(59, 130, 246, 0.75);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.18);
+  outline: none;
 }
 
 .form-investimento input:disabled {
-  opacity: .6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
-/* Botão de salvar alinhado à direita no desktop, full no mobile */
 .form-investimento button[type="submit"] {
   grid-column: -2 / -1;
-  justify-self: end;
-  background: #3b82f6;
+  align-self: end;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(20, 184, 166, 0.65));
   color: #fff;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 10px;
-  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  padding: 0.9rem 1.4rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: transform .06s ease, background .2s, box-shadow .2s;
-  box-shadow: 0 8px 20px rgba(59,130,246,.25);
+  box-shadow: 0 15px 35px rgba(20, 184, 166, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .form-investimento button[type="submit"]:hover {
-  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 22px 46px rgba(20, 184, 166, 0.45);
 }
+
 .form-investimento button[type="submit"]:active {
-  transform: translateY(1px);
+  transform: translateY(0);
 }
 
-@media (max-width: 640px) {
-  .form-investimento button[type="submit"] {
-    grid-column: 1 / -1;
-    justify-self: stretch;
-  }
-}
-
-/* ===== Lista de registros ===== */
 .investimentos h2 {
-  margin: 22px auto 10px;
+  margin: 2.4rem auto 1rem;
   max-width: 1100px;
   font-size: 1.1rem;
-  text-align: left;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .investimentos ul {
@@ -133,37 +111,71 @@
   padding: 0;
   list-style: none;
   max-width: 1100px;
-  border: 1px solid #1f2a44;
-  border-radius: 10px;
+  border: 1px solid var(--divider);
+  border-radius: 18px;
   overflow: hidden;
-  background: #0b1220;
+  background: rgba(17, 24, 39, 0.88);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(16px);
 }
 
 .investimentos ul li {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
   align-items: center;
-  padding: 12px 14px;
-  border-bottom: 1px solid #1f2a44;
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  transition: background 0.2s ease;
 }
+
 .investimentos ul li:last-child {
   border-bottom: none;
 }
 
-.investimentos ul li strong {
-  color: #e5e7eb;
+.investimentos ul li:hover {
+  background: rgba(59, 130, 246, 0.08);
 }
 
-/* Chip opcional (se quiser usar classes por tipo) */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: .8rem;
-  border: 1px solid #233253;
-  background: rgba(255,255,255,0.04);
-  color: #93a5c5;
+.investimentos ul li strong {
+  color: var(--accent-primary);
+}
+
+.investimentos ul li span {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 1200px) {
+  .form-investimento {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .form-investimento button[type="submit"] {
+    grid-column: 1 / -1;
+    justify-self: end;
+  }
+}
+
+@media (max-width: 960px) {
+  .investimentos {
+    margin-left: 0;
+    padding-top: 5.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-investimento {
+    grid-template-columns: 1fr;
+  }
+
+  .form-investimento button[type="submit"] {
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .investimentos ul li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

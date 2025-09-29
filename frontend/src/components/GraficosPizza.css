@@ -1,17 +1,45 @@
 .graficos-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
-    margin-top: 2rem;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
     justify-content: center;
 }
 
 .grafico {
     width: 100%;
-    max-width: 500px;
-    background-color: #ffffff;
-    padding: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    max-width: 480px;
+    background: rgba(17, 24, 39, 0.85);
+    border: 1px solid var(--divider);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-soft);
     text-align: center;
+    backdrop-filter: blur(12px);
+}
+
+.grafico h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.recharts-default-tooltip {
+    background-color: rgba(17, 24, 39, 0.92) !important;
+    border: 1px solid var(--divider) !important;
+    border-radius: 10px !important;
+    color: var(--text-primary) !important;
+    padding: 0.6rem 0.8rem !important;
+}
+
+.recharts-legend-item-text {
+    fill: var(--text-muted) !important;
+}
+
+.grafico svg text {
+    fill: var(--text-primary);
+    font-weight: 500;
 }

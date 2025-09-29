@@ -84,7 +84,7 @@ function Dashboard() {
                   <p>{formatarBRL(saldo)}</p>
                 </div>
                 <div className="card investimento">
-                  <h2>Investimentoss</h2>
+                  <h2>Investimentos</h2>
                   <p>{formatarBRL(investimentos)}</p>
                 </div>
               </div>
