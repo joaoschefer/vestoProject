@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vesto_project',
-        'USER': 'postgres',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': 'vestoProject',     
+        'USER': 'postgres',      
+        'PASSWORD': '2101',
+        'HOST': '127.0.0.1',     
+        'PORT': '5432',          
     }
 }
 
