@@ -7,6 +7,8 @@ import Header from "../components/Header";
 function Despesas() {
   const [transacoes, setTransacoes] = useState([]);
 
+  const [showModal, setShowModal] = useState(false);
+
   const [novaTransacao, setNovaTransacao] = useState({
     tipo: "despesa",
     valor: "",
@@ -36,7 +38,7 @@ function Despesas() {
     "Outros Ganhos",
   ]);
 
-  const API_URL = "http://localhost:8000/api/transacoes/"; // DRF (barra final!)
+  const API_URL = "http://localhost:8000/api/transacoes/";
 
   useEffect(() => {
     const fetchTransacoes = async () => {
@@ -62,7 +64,7 @@ function Despesas() {
 
     const { valor, data, categoria, tipo } = novaTransacao;
     if (!valor || !data || !categoria || !tipo) {
-      alert("Por favor, preencha o valor, data, tipo e categoria da transação.");
+      alert("Por favor, preencha valor, data, tipo e categoria.");
       return;
     }
 
@@ -73,7 +75,6 @@ function Despesas() {
         body: JSON.stringify({
           ...novaTransacao,
           valor: Number(novaTransacao.valor),
-          data: novaTransacao.data, // YYYY-MM-DD
         }),
       });
 
@@ -93,6 +94,9 @@ function Despesas() {
         categoria: "",
         metodoPagamento: "",
       });
+
+      setShowModal(false);
+
     } catch (err) {
       console.error(err);
       alert("Não foi possível salvar a transação.");
@@ -109,7 +113,7 @@ function Despesas() {
       setTransacoes((prev) => prev.filter((t) => t.id !== id));
     } catch (err) {
       console.error(err);
-      alert("Não foi possível excluir a transação.");
+      alert("Não foi possível excluir.");
     }
   };
 
@@ -131,107 +135,125 @@ function Despesas() {
         <main className="despesas-content">
           <h1>Movimentações Financeiras</h1>
 
-          <section className="adicionar-transacao">
-            <h2>Registrar Nova Movimentação</h2>
-            <form onSubmit={handleSubmit} className="transacao-form">
-              <div className="form-group">
-                <label htmlFor="tipo">Tipo de Transação:</label>
-                <select
-                  id="tipo"
-                  name="tipo"
-                  value={novaTransacao.tipo}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="despesa">Despesa</option>
-                  <option value="ganho">Ganho (Receita)</option>
-                </select>
-              </div>
+          <button className="btn-adicionar" onClick={() => setShowModal(true)}>
+            + Nova Movimentação
+          </button>
 
-              <div className="form-group">
-                <label htmlFor="valor">Valor (R$):</label>
-                <input
-                  type="number"
-                  id="valor"
-                  name="valor"
-                  value={novaTransacao.valor}
-                  onChange={handleChange}
-                  step="0.01"
-                  required
-                />
-              </div>
+          {showModal && (
+            <div className="modal-overlay">
+              <div className="modal">
+                <h2>Registrar Nova Movimentação</h2>
 
-              <div className="form-group">
-                <label htmlFor="data">Data:</label>
-                <input
-                  type="date"
-                  id="data"
-                  name="data"
-                  value={novaTransacao.data}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+                <form onSubmit={handleSubmit} className="transacao-form">
 
-              <div className="form-group">
-                <label htmlFor="descricao">Descrição:</label>
-                <input
-                  type="text"
-                  id="descricao"
-                  name="descricao"
-                  value={novaTransacao.descricao}
-                  onChange={handleChange}
-                  placeholder="Ex: Jantar na pizzaria / Salário mensal"
-                />
-              </div>
+                  <div className="form-group">
+                    <label htmlFor="tipo">Tipo:</label>
+                    <select
+                      id="tipo"
+                      name="tipo"
+                      value={novaTransacao.tipo}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="despesa">Despesa</option>
+                      <option value="ganho">Ganho</option>
+                    </select>
+                  </div>
 
-              <div className="form-group">
-                <label htmlFor="categoria">Categoria:</label>
-                <select
-                  id="categoria"
-                  name="categoria"
-                  value={novaTransacao.categoria}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Selecione uma categoria</option>
-                  {categoriasDisponiveis.map((cat, index) => (
-                    <option key={index} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                  <div className="form-group">
+                    <label htmlFor="valor">Valor (R$):</label>
+                    <input
+                      type="number"
+                      id="valor"
+                      name="valor"
+                      value={novaTransacao.valor}
+                      onChange={handleChange}
+                      step="0.01"
+                      required
+                    />
+                  </div>
 
-              <div className="form-group">
-                <label htmlFor="metodoPagamento">Método:</label>
-                <select
-                  id="metodoPagamento"
-                  name="metodoPagamento"
-                  value={novaTransacao.metodoPagamento}
-                  onChange={handleChange}
-                >
-                  <option value="">Selecione um método</option>
-                  <option value="Dinheiro">Dinheiro</option>
-                  <option value="Cartão de Crédito">Cartão de Crédito</option>
-                  <option value="Cartão de Débito">Cartão de Débito</option>
-                  <option value="Pix">Pix</option>
-                  <option value="Boleto">Boleto</option>
-                  <option value="Transferência Bancária">Transferência Bancária</option>
-                  <option value="Outro">Outro</option>
-                </select>
-              </div>
+                  <div className="form-group">
+                    <label htmlFor="data">Data:</label>
+                    <input
+                      type="date"
+                      id="data"
+                      name="data"
+                      value={novaTransacao.data}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
-              <button type="submit" className="btn-adicionar">
-                Adicionar Movimentação
-              </button>
-            </form>
-          </section>
+                  <div className="form-group">
+                    <label htmlFor="descricao">Descrição:</label>
+                    <input
+                      type="text"
+                      id="descricao"
+                      name="descricao"
+                      value={novaTransacao.descricao}
+                      onChange={handleChange}
+                      placeholder="Ex: Mercado / Salário"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="categoria">Categoria:</label>
+                    <select
+                      id="categoria"
+                      name="categoria"
+                      value={novaTransacao.categoria}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">Selecione...</option>
+                      {categoriasDisponiveis.map((cat, index) => (
+                        <option key={index} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="metodoPagamento">Método:</label>
+                    <select
+                      id="metodoPagamento"
+                      name="metodoPagamento"
+                      value={novaTransacao.metodoPagamento}
+                      onChange={handleChange}
+                    >
+                      <option value="">Selecione...</option>
+                      <option value="Dinheiro">Dinheiro</option>
+                      <option value="Cartão de Crédito">Cartão de Crédito</option>
+                      <option value="Cartão de Débito">Cartão de Débito</option>
+                      <option value="Pix">Pix</option>
+                      <option value="Transferência">Transferência</option>
+                      <option value="Boleto">Boleto</option>
+                    </select>
+                  </div>
+
+                  <button type="submit" className="btn-adicionar">
+                    Salvar Movimentação
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn-action btn-delete"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Cancelar
+                  </button>
+                </form>
+              </div>
+            </div>
+          )}
 
           <section className="lista-transacoes">
-            <h2>Histórico de Movimentações</h2>
+            <h2>Histórico</h2>
+
             {transacoes.length === 0 ? (
-              <p>Nenhuma movimentação registrada ainda.</p>
+              <p>Nenhuma movimentação registrada.</p>
             ) : (
               <table>
                 <thead>
