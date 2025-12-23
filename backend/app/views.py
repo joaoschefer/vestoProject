@@ -7,5 +7,5 @@ class TransacaoViewSet(viewsets.ModelViewSet):
     serializer_class = TransacaoSerializer
 
 class InvestimentoViewSet(viewsets.ModelViewSet):
-    queryset = Investimento.objects.all().order_by('data')
+    queryset = Investimento.objects.all().order_by('-data', '-criado_em')
     serializer_class = InvestimentoSerializer

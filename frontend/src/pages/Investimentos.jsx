@@ -1,76 +1,66 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Investimentos.css";
 
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import { listarInvestimentos, criarInvestimento } from "../services/api";
 
 function Investimentos() {
-  const [investimento, setInvestimento] = useState([]);
+  const [modalAberto, setModalAberto] = useState(null);
 
-  const [novoInvestimento, setNovoInvestimento] = useState({
-    tipo: "acao",
+  const [form, setForm] = useState({
     ativo: "",
     valor: "",
-    cotas: "",
+    quantidade: "",
     data: "",
   });
 
-  const precisaCotas = novoInvestimento.tipo === "acao" || novoInvestimento.tipo === "fundoimobiliario";
+  function calcularTotal() {
+    const valor = parseFloat(form.valor) || 0;
+    const qtd = parseFloat(form.quantidade) || 0;
+    return (valor * qtd).toFixed(2);
+  }
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await listarInvestimentos();
-        setInvestimento(data);
-      } catch (e) {
-        console.error(e);
-        alert("Falha ao carregar investimentos");
-      }
-    })();
-  }, []);
+  function abrirModal(tipo) {
+    setModalAberto(tipo);
+  }
+
+  function fecharModal() {
+    setModalAberto(null);
+    setForm({ ativo: "", valor: "", quantidade: "", data: "" });
+  }
 
   function handleChange(e) {
-    const { name, value } = e.target;
-    setNovoInvestimento((prev) => ({ ...prev, [name]: value }));
+    setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if (!novoInvestimento.valor || Number(novoInvestimento.valor) <= 0) {
-      alert("Informe um valor válido.");
-      return;
-    }
-    if (!novoInvestimento.data) {
-      alert("Informe a data.");
-      return;
-    }
-    if (precisaCotas && (!novoInvestimento.cotas || Number(novoInvestimento.cotas) <= 0)) {
-      alert("Para Ação/FII, informe a quantidade de cotas.");
-      return;
-    }
-
     const payload = {
-      tipo: novoInvestimento.tipo,
-      ativo: novoInvestimento.ativo,
-      valor: novoInvestimento.valor,
-      data: novoInvestimento.data,
-      cotas: precisaCotas ? novoInvestimento.cotas : null,
+      tipo: modalAberto,
+      ativo: form.ativo,
+      valor: form.valor,
+      quantidade: form.quantidade || null,
+      total: calcularTotal(),
+      data: form.data,
     };
 
     try {
-      const criado = await criarInvestimento(payload);
-      setInvestimento((lista) => [criado, ...lista]);
-      setNovoInvestimento((prev) => ({
-        ...prev,
-        valor: "",
-        cotas: "",
-        data: "",
-      }));
-    } catch (e) {
-      console.error(e);
-      alert("Falha ao salvar investimento. Verifique os campos.");
+      const resp = await fetch("http://localhost:8000/api/investimentos/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (resp.ok) {
+        fecharModal();
+      } else {
+        alert("Erro ao salvar investimento");
+      }
+    } catch (err) {
+      alert("Erro de conexão com o servidor");
     }
   }
 
@@ -80,81 +70,182 @@ function Investimentos() {
       <div className="layout">
         <Sidebar />
         <main className="investimentos">
-          <h1>Página Principal de Investimentos</h1>
+          <h1>Investimentos</h1>
 
-          <form className="form-investimento" onSubmit={handleSubmit}>
-            <label>
-              Tipo
-              <select name="tipo" value={novoInvestimento.tipo} onChange={handleChange}>
-                <option value="acao">Ação</option>
-                <option value="fundoimobiliario">Fundo Imobiliário</option>
-                <option value="rendafixa">Renda Fixa</option>
-                <option value="eua">Estados Unidos</option>
-              </select>
-            </label>
+          <div className="botoes-investimentos">
+            <button onClick={() => abrirModal("br")}>Bolsa BR</button>
+            <button onClick={() => abrirModal("eua")}>EUA</button>
+            <button onClick={() => abrirModal("cripto")}>Cripto</button>
+          </div>
 
-            <label>
-              Ativo (sigla)
-              <input
-                type="text"
-                name="ativo"
-                value={novoInvestimento.ativo}
-                onChange={handleChange}
-                placeholder="Ex.: PETR4, VISC11"
-                required
-              />
-            </label>
+          {modalAberto && (
+            <div className="modal-overlay" onClick={fecharModal}>
+              <div className="modal" onClick={(e) => e.stopPropagation()}>
+                <h2>
+                  {modalAberto === "br" && "Bolsa Brasileira"}
+                  {modalAberto === "eua" && "Investimentos EUA"}
+                  {modalAberto === "cripto" && "Criptomoedas"}
+                </h2>
 
-            <label>
-              Valor (R$)
-              <input
-                type="number"
-                name="valor"
-                value={novoInvestimento.valor}
-                onChange={handleChange}
-                step="0.01"
-                min="0"
-                required
-              />
-            </label>
+                <form className="form-investimento" onSubmit={handleSubmit}>
+                  {modalAberto === "br" && (
+                    <>
+                      <label>
+                        Ativo (B3)
+                        <input
+                          name="ativo"
+                          type="text"
+                          placeholder="Ex: PETR4"
+                          value={form.ativo}
+                          onChange={handleChange}
+                          required
+                        />
+                      </label>
 
-            <label>
-              Cotas
-              <input
-                type="number"
-                name="cotas"
-                value={novoInvestimento.cotas}
-                onChange={handleChange}
-                step="0.01"
-                min="0"
-                disabled={!precisaCotas} // bloqueado para renda fixa e eua
-              />
-            </label>
+                      <label>
+                        Valor por ativo
+                        <input
+                          name="valor"
+                          type="number"
+                          step="0.01"
+                          value={form.valor}
+                          onChange={handleChange}
+                          required
+                        />
+                      </label>
 
-            <label>
-              Data
-              <input
-                type="date"
-                name="data"
-                value={novoInvestimento.data}
-                onChange={handleChange}
-                required
-              />
-            </label>
+                      <label>
+                        Quantidade
+                        <input
+                          name="quantidade"
+                          type="number"
+                          step="1"
+                          value={form.quantidade}
+                          onChange={handleChange}
+                          required
+                        />
+                      </label>
 
-            <button type="submit">Salvar</button>
-          </form>
+                      <label>
+                        Total gasto
+                        <input 
+                          type="text"
+                          value={calcularTotal()}
+                          disabled
+                        />
+                      </label>
+                    </>
+                  )}
 
-          <ul style={{ marginTop: 16 }}>
-            {investimento.map((inv) => (
-              <li key={inv.id}>
-                <strong>{inv.tipo}</strong> - {inv.atibo} - R$ {inv.valor}
-                {inv.cotas !== null && inv.cotas !== "" ? ` - ${inv.cotas} cotas` : ""}
-                {` — ${inv.data}`}
-              </li>
-            ))}
-          </ul>
+                  {modalAberto === "eua" && (
+                    <>
+                      <label>
+                        Ativo (EUA)
+                        <input
+                          name="ativo"
+                          type="text"
+                          placeholder="Ex: AAPL"
+                          value={form.ativo}
+                          onChange={handleChange}
+                          required
+                        />
+                      </label>
 
+                      <label>
+                        Valor em dólar
+                        <input
+                          name="valor"
+                          type="number"
+                          step="0.01"
+                          value={form.valor}
+                          onChange={handleChange}
+                          required
+                        />
+                      </label>
+
+                      <label>
+                        Quantidade
+                        <input
+                          name="quantidade"
+                          type="number"
+                          step="1"
+                          value={form.quantidade}
+                          onChange={handleChange}
+                          required
+                        />
+                      </label>
+
+                      <label>
+                        Total gasto
+                        <input
+                          type="text"
+                          value={calcularTotal()}
+                          disabled
+                        />
+                      </label>
+                    </>
+                  )}
+
+                  {modalAberto === "cripto" && (
+                    <>
+                      <label>
+                        Criptomoeda
+                        <input
+                          name="ativo"
+                          type="text"
+                          placeholder="Ex: BTC"
+                          value={form.ativo}
+                          onChange={handleChange}
+                          required
+                        />
+                      </label>
+
+                      <label>
+                        Valor investido
+                        <input
+                          name="valor"
+                          type="number"
+                          step="0.01"
+                          value={form.valor}
+                          onChange={handleChange}
+                          required
+                        />
+                      </label>
+
+                      <label>
+                        Quantidade
+                        <input
+                          name="quantidade"
+                          type="number"
+                          step="0.000001"
+                          value={form.quantidade}
+                          onChange={handleChange}
+                        />
+                      </label>
+                    </>
+                  )}
+
+                  <label>
+                    Data
+                    <input
+                      name="data"
+                      type="date"
+                      value={form.data}
+                      onChange={handleChange}
+                      required
+                    />
+                  </label>
+
+                  <div className="modal-actions">
+                    <button type="button" onClick={fecharModal}>
+                      Cancelar
+                    </button>
+                    <button type="submit">Salvar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </>

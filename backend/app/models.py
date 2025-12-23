@@ -27,16 +27,23 @@ class Transacao(models.Model):
     class Meta:
         ordering = ['-data', '-criado_em']
 
+
 class Investimento(models.Model):
     TIPO_CHOICES = [
-        ('acao', 'Ação'),
-        ('fundoimobiliario', 'Fundo Imobiliário'),
-        ('rendafixa', 'Renda Fixa'),
-        ('eua', 'Estados Unidos'),
+        ('br', 'Bolsa BR'),
+        ('eua', 'EUA'),
+        ('cripto', 'Cripto'),
     ]
 
-    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
-    ativo = models.CharField(max_length=10, null=True, blank=True)
-    valor = models.DecimalField(max_digits=10, decimal_places=2)
-    cotas = models.DecimalField(max_digits=10, decimal_places=2)
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    ativo = models.CharField(max_length=20)
+    valor = models.DecimalField(max_digits=12, decimal_places=2)
+    quantidade = models.DecimalField(max_digits=18, decimal_places=6)
+    total = models.DecimalField(max_digits=14, decimal_places=2)
     data = models.DateField()
+
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.ativo} - ({self.tipo})"
+    
