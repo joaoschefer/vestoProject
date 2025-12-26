@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Investimentos.css";
 
 import Header from "../components/Header";
@@ -13,6 +13,8 @@ function Investimentos() {
     quantidade: "",
     data: "",
   });
+
+  const [investimentos, setInvestimentos] = useState([]);
 
   function calcularTotal() {
     const valor = parseFloat(form.valor) || 0;
@@ -56,11 +58,28 @@ function Investimentos() {
 
       if (resp.ok) {
         fecharModal();
+        buscarInvestimentos();
       } else {
         alert("Erro ao salvar investimento");
       }
     } catch (err) {
       alert("Erro de conexão com o servidor");
+    }
+  }
+
+  useEffect(() => {
+    buscarInvestimentos();
+  }, []);
+
+  async function buscarInvestimentos() {
+    try {
+      const resp = await fetch("http://localhost:8000/api/investimentos/");
+      if (resp.ok) {
+        const data = await resp.json();
+        setInvestimentos(data);
+      }
+    } catch (err) {
+      console.error("Erro ao buscar investimentos");
     }
   }
 
@@ -76,6 +95,19 @@ function Investimentos() {
             <button onClick={() => abrirModal("br")}>Bolsa BR</button>
             <button onClick={() => abrirModal("eua")}>EUA</button>
             <button onClick={() => abrirModal("cripto")}>Cripto</button>
+          </div>
+
+          <div className="lista-investimentos">
+            {investimentos.length === 0 && (
+              <p>Nenhum investimento cadastrado.</p>
+            )}
+
+            {investimentos.map((inv) => (
+              <div key={inv.id} className="item-investimento">
+                <strong>{inv.ativo}</strong> ({inv.tipo.toUpperCase()})<br />
+                Total: R$ {inv.total} — Data: {inv.data}
+              </div>
+            ))}
           </div>
 
           {modalAberto && (
@@ -128,11 +160,7 @@ function Investimentos() {
 
                       <label>
                         Total gasto
-                        <input 
-                          type="text"
-                          value={calcularTotal()}
-                          disabled
-                        />
+                        <input type="text" value={calcularTotal()} disabled />
                       </label>
                     </>
                   )}
@@ -177,11 +205,7 @@ function Investimentos() {
 
                       <label>
                         Total gasto
-                        <input
-                          type="text"
-                          value={calcularTotal()}
-                          disabled
-                        />
+                        <input type="text" value={calcularTotal()} disabled />
                       </label>
                     </>
                   )}
